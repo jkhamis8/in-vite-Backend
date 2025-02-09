@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const userSchema = new mongoose.Schema(
+const invitationSchema = new mongoose.Schema(
   {
     guestName: {
       type: String,
@@ -41,16 +41,16 @@ const userSchema = new mongoose.Schema(
     },
     attendanceBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: User
+      ref: 'User'
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: User
+      ref: 'User'
     }
   },
   { timestamps: true }
 )
 
-const User = mongoose.model('User', userSchema)
+const Invitation = mongoose.model('Invitation', invitationSchema)
 
-module.exports = User
+module.exports = Invitation

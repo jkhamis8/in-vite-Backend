@@ -6,7 +6,7 @@ const eventSchema = new mongoose.Schema(
   {
     eventManager: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: User
+      ref: 'User'
     },
     timeHour: {
       type: Number,
@@ -26,7 +26,7 @@ const eventSchema = new mongoose.Schema(
     },
     venue: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Venue
+      ref: 'Venue'
     },
     addressLine: {
       type: String
@@ -44,13 +44,13 @@ const eventSchema = new mongoose.Schema(
     representatives: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: User
+        ref: 'User'
       }
     ],
     AttendanceScanners: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: User
+        ref: 'User'
       }
     ]
   },
