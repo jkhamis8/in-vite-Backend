@@ -2,12 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const User = require('../models/userModel.js');
+const User = require('../models/User.js');
 const jwt = require('jsonwebtoken');
 
 const SALT_LENGTH = 12;
 
 router.post('/signup', async (req, res) => {
+
   try {
     // Check if the username is already taken
     const userInDatabase = await User.findOne({ username: req.body.username });
