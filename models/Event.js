@@ -1,12 +1,23 @@
 const mongoose = require('mongoose')
-const User = require('./User')
-const Venue = require('./Venue')
 
 const eventSchema = new mongoose.Schema(
   {
-    eventManager: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: User
+    eventName: {
+      type: String,
+      require: true
+    },
+    description: {
+      type: String
+    },
+    addressLine: {
+      type: String
+    },
+    locationURL: {
+      type: String
+    },
+    date: {
+      type: Date,
+      require: true
     },
     timeHour: {
       type: Number,
@@ -20,37 +31,18 @@ const eventSchema = new mongoose.Schema(
       min: 0,
       max: 59
     },
-    date: {
-      type: Date,
-      require: true
-    },
     venue: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Venue
+      ref: 'Venue'
     },
-    addressLine: {
-      type: String
-    },
-    locationURL: {
-      type: String
-    },
-    description: {
-      type: String
-    },
-    eventName: {
-      type: String,
-      require: true
+    eventManager: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     },
     representatives: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: User
-      }
-    ],
-    AttendanceScanners: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: User
+        ref: 'User'
       }
     ]
   },
