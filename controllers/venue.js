@@ -53,4 +53,27 @@ router.delete('/deleteVenue/:venueID', async (req, res) => {
     console.log(error);
   }
 })
+
+router.put('/addVenueInEvent', async (req, res) => {
+  try {
+    const eventID = req.body.eventID
+    const venueID = req.body.venueID
+    await Event.findByIdAndUpdate(eventID, { $push: { Venue: venueID } })
+    res.status(200).json({ 'done': 'done' });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.put('/removeVenueFromEvent/', async (req, res) => {
+  try {
+    const eventID = req.body.eventID
+    const venueID = req.body.venueID
+    await Event.findByIdAndUpdate(eventID, { $pull: { Venue: venueID } })
+    res.status(200).json({ 'done': 'done' });
+  } catch (error) {
+    console.log(error);
+  }
+})
+
 module.exports = router;

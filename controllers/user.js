@@ -60,6 +60,7 @@ router.post('/editUserProfile', async (req, res) => {
     if (req.body.password) {
       req.body.password = bcrypt.hashSync(req.body.password, SALT_LENGTH)
       await User.findByIdAndUpdate(req.body._id, {
+        fullName: req.body.fullName,
         email: req.body.email,
         password: req.body.password
       })
@@ -72,22 +73,28 @@ router.post('/editUserProfile', async (req, res) => {
   }
 })
 
-router.get('send-email', async (req, res) => {
-  console.log('send-email')
-
-  return res.json({ message: 'send-email' })
-  // try {
-  //   const to = 'redaeis@gmail.com'
-  //   const subject = 'test Email'
-  //   const htmlContent = `<h1>Hi ${to},</h1><p>You are invited to our event. Please RSVP!</p>`
-
-  //   await sendInvitationEmail(to, subject, htmlContent)
-  //   res.status(201).json({ message: 'invitation sent!' })
-  // } catch (error) {
-  //   res
-  //     .status(500)
-  //     .json({ message: 'Error on sending email', error: error.message })
-  // }
+router.post('/createRepresentative', async (req, res) => {
+  try {
+    // Check if the username is already taken
+    const userInDatabase = await User.findOne({ username: req.body.username })
+    if (userInDatabase) {
+      return res.json({ error: 'Username already taken.' })
+    }
+    // Create a new user with hashed password
+    const user = await User.create({
+      username: req.body.username,
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, SALT_LENGTH),
+      fullName: req.body.fullName,
+      role: req.body.role,
+      eventManager: req.body._id
+    })
+    res.status(201).json({ user, token })
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
 })
+
+
 
 module.exports = router

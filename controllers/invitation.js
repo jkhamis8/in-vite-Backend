@@ -4,6 +4,7 @@ const router = express.Router()
 const User = require('../models/User.js');
 const Event = require('../models/Event.js');
 const Invitation = require('../models/Invitation.js')
+const { sendInvitationEmail } = require('./utils/emailService')
 const verifyToken = require('../middleware/verify-token.js');
 app.use(verifyToken);
 
@@ -30,6 +31,15 @@ router.get("/getInvite/:inviteId", async (req, res) => {
 router.post("/createInvite", async (req, res) => {
   try {
     const createInvite = await Invitation.create(req.body[0])
+    try {
+      const to = req.body.email
+      const subject = 'Invitation Email'
+      const htmlContent = `<h1>Hi ${req.body.guestName},</h1><p>You are invited to our event. Please RSVP!</p>`
+      await sendInvitationEmail(to, subject, htmlContent)
+      await Invitation.findByIdAndUpdate(createInvite._id, { invitationStatus: 1 })
+    } catch (error) {
+      await Invitation.findByIdAndUpdate(createInvite._id, { invitationStatus: 2 })
+    }
     res.status(200).json({ 'done': 'done' });
   } catch (error) {
     console.log(error)
@@ -38,8 +48,8 @@ router.post("/createInvite", async (req, res) => {
 
 router.put("/editInvite", async (req, res) => {
   try {
-    const entryId = req.body._id
-    await Invitation.findByIdAndUpdate(entryId, req.body)
+    const inviteID = req.body._id
+    await Invitation.findByIdAndUpdate(inviteID, req.body)
     res.status(200).json({ 'done': 'done' });
   } catch (error) {
     console.log(error)
@@ -50,6 +60,28 @@ router.delete("/deleteInvite/:inviteID", async (req, res) => {
   try {
     const inviteID = req.params.inviteID
     await Invitation.findByIdAndDelete(inviteID)
+    res.status(200).json({ 'done': 'done' });
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+router.put("/rsvpResponse/:inviteID/:action", async (req, res) => {
+  try {
+    const inviteID = req.params.inviteID
+    const action = req.params.action
+    await Invitation.findByIdAndUpdate(inviteID, { RSVPStatus: action })
+
+    res.status(200).json({ 'done': 'done' });
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+router.put("/attendanceStatus/:inviteID", async (req, res) => {
+  try {
+    const inviteID = req.params.inviteID
+    await Invitation.findByIdAndUpdate(inviteID, { attendanceStatus: 1 })
     res.status(200).json({ 'done': 'done' });
   } catch (error) {
     console.log(error)
