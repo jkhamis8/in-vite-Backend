@@ -42,7 +42,12 @@ router.post('/signin', async (req, res) => {
     const user = await User.findOne({ username: req.body.username })
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
       const token = jwt.sign(
-        { username: user.username, _id: user._id, email: user.email },
+        {
+          username: user.username,
+          _id: user._id,
+          email: user.email,
+          role: user.role
+        },
         process.env.JWT_SECRET
       )
 
@@ -95,6 +100,15 @@ router.post('/createRepresentative', async (req, res) => {
   }
 })
 
-
+router.get('/getRepresentatives/:eventManagerID', async (req, res) => {
+  try {
+    const representatives = await User.find({
+      eventManager: req.params.eventManagerID
+    })
+    res.status(200).json({ representatives })
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+})
 
 module.exports = router
