@@ -36,11 +36,24 @@ router.get('/getEvent/:eventID', async (req, res) => {
 
 router.post('/createEvent', async (req, res) => {
   try {
+    if (req.body[0].venue == '') {
+      req.body[0].venue = null
+    }
     const createdEvent = await Event.create(req.body[0])
     await Event.findByIdAndUpdate(createdEvent, { eventManager: req.body[1] })
     res.status(200).json({ done: 'done' })
   } catch (error) {
     console.log(error)
+  }
+})
+
+router.get('/editEvent/:eventID', async (req, res) => {
+  try {
+    const eventID = req.params.eventID
+    const eventObj = await Event.findById(eventID)
+    res.json({ eventObj });
+  } catch (error) {
+    console.log(error);
   }
 })
 

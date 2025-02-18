@@ -60,7 +60,7 @@ router.post('/signin', async (req, res) => {
   }
 })
 
-router.post('/editUserProfile', async (req, res) => {
+router.put('/editUserProfile', async (req, res) => {
   try {
     if (req.body.password) {
       req.body.password = bcrypt.hashSync(req.body.password, SALT_LENGTH)
@@ -70,11 +70,24 @@ router.post('/editUserProfile', async (req, res) => {
         password: req.body.password
       })
     } else {
-      await User.findByIdAndUpdate(req.body._id, { email: req.body.email })
+      await User.findByIdAndUpdate(req.body._id, {
+        fullName: req.body.fullName,
+        email: req.body.email
+      })
     }
     res.status(200).json({ done: 'done' })
   } catch (error) {
     res.status(400).json({ error: error.message })
+  }
+})
+
+router.get('/getRepresentative/:userID', async (req, res) => {
+  try {
+    const userID = req.params.userID
+    const userObj = await User.findById(userID)
+    res.json({ userObj });
+  } catch (error) {
+    console.log(error);
   }
 })
 
@@ -85,6 +98,7 @@ router.post('/createRepresentative', async (req, res) => {
     if (userInDatabase) {
       return res.json({ error: 'Username already taken.' })
     }
+    console.log(req.body);
     // Create a new user with hashed password
     const user = await User.create({
       username: req.body.username,
@@ -92,13 +106,14 @@ router.post('/createRepresentative', async (req, res) => {
       password: bcrypt.hashSync(req.body.password, SALT_LENGTH),
       fullName: req.body.fullName,
       role: req.body.role,
-      eventManager: req.body._id
+      eventManager: req.body.eventManager
     })
-    res.status(201).json({ user, token })
+    res.status(200).json('done')
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
 })
+
 
 router.get('/getRepresentatives/:eventManagerID', async (req, res) => {
   try {
