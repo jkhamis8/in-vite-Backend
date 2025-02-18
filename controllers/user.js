@@ -80,20 +80,15 @@ router.post('/editUserProfile', async (req, res) => {
 
 router.post('/createRepresentative', async (req, res) => {
   try {
+    console.log(req.body);
+
     // Check if the username is already taken
     const userInDatabase = await User.findOne({ username: req.body.username })
     if (userInDatabase) {
       return res.json({ error: 'Username already taken.' })
     }
     // Create a new user with hashed password
-    const user = await User.create({
-      username: req.body.username,
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, SALT_LENGTH),
-      fullName: req.body.fullName,
-      role: req.body.role,
-      eventManager: req.body._id
-    })
+    const user = await User.create(req.body)
     res.status(201).json({ user, token })
   } catch (error) {
     res.status(400).json({ error: error.message })
