@@ -14,7 +14,7 @@ router.get('/getAllVenues/', async (req, res) => {
   }
 })
 
-router.get('/getVenues/:venueID', async (req, res) => {
+router.get('/getVenue/:venueID', async (req, res) => {
   try {
     const venueID = req.params.venueID
     const venueObj = await Venue.findById(venueID)
@@ -36,6 +36,8 @@ router.post('/createVenue', async (req, res) => {
 
 router.put('/editVenue', async (req, res) => {
   try {
+    console.log(req.body);
+
     const venueID = req.body._id
     await Venue.findByIdAndUpdate(venueID, req.body)
     res.status(200).json({ 'done': 'done' });
