@@ -47,10 +47,10 @@ router.post('/createInvite', async (req, res) => {
         <p><strong>Location:</strong> ${eventObj.addressLine}</p>
         <p>Please let us know if you can make it by clicking the RSVP button below:</p>
         <p>
-          <a href="${process.env.URL}/rsvpResponse/${createInvite._id}/1" style="display:inline-block;padding:10px 20px;font-size:16px;color:#fff;background-color:#4CAF50;text-decoration:none;border-radius:5px;">Accept</a>
+          <a href="${process.env.URL}/RSVP/${createInvite._id}/1" style="display:inline-block;padding:10px 20px;font-size:16px;color:#fff;background-color:#4CAF50;text-decoration:none;border-radius:5px;">Accept</a>
         </p>
               <p>
-          <a href="${process.env.URL}/rsvpResponse/${createInvite._id}/0" style="display:inline-block;padding:10px 20px;font-size:16px;color:#fff;background-color:#cb1a55;text-decoration:none;border-radius:5px;">Reject</a>
+          <a href="${process.env.URL}/RSVP/${createInvite._id}/0" style="display:inline-block;padding:10px 20px;font-size:16px;color:#fff;background-color:#cb1a55;text-decoration:none;border-radius:5px;">Reject</a>
         </p>
         <p>We look forward to seeing you there!</p>
         <p>Best regards,<br/>${eventObj.fullName}</p>
